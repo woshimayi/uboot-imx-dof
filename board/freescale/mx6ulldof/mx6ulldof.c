@@ -358,9 +358,9 @@ int checkboard(void)
 	if (is_mx6ull_9x9_evk())
 		puts("Board: MX6ULL 9x9 EVK\n");
 	else if (is_cpu_type(MXC_CPU_MX6ULZ))
-		puts("Board: MX6ULZ 14x14 EVK\n");
+		puts("Board: MX6ULZ 14x14 DOF\n");
 	else
-		puts("Board: MX6ULL 14x14 EVK\n");
+		puts("Board: MX6ULL 14x14 DOF\n");
 
 	return 0;
 }

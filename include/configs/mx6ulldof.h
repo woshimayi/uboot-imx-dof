@@ -53,10 +53,10 @@
 #define CONFIG_SYS_I2C_SPEED		100000
 #endif
 
-#define CONFIG_IPADDR 10.8.8.1
+#define CONFIG_IPADDR 10.8.8.10
 #define CONFIG_NETMASK 255.255.255.0
 #define CONFIG_SERVERIP 10.8.8.4
-#define CONFIG_GATEWAYIP 10.8.8.1
+#define CONFIG_GATEWAYIP 10.8.8.10
 #define CONFIG_ETHADDR 5c:54:00:12:3d:56
 
 
@@ -289,23 +289,8 @@
 #define CONFIG_USB_MAX_CONTROLLER_COUNT 2
 #endif
 
-#define CONFIG_FEC_ENET_DEV		1
-
-#if (CONFIG_FEC_ENET_DEV == 0)
-#define IMX_FEC_BASE			ENET_BASE_ADDR
-#define CONFIG_FEC_MXC_PHYADDR          0x0
 #define CONFIG_FEC_XCV_TYPE             RMII
-#define CONFIG_ETHPRIME			"FEC0"
-#elif (CONFIG_FEC_ENET_DEV == 1)
-#define IMX_FEC_BASE			ENET2_BASE_ADDR
-#define CONFIG_FEC_MXC_PHYADDR		0x1
-#define CONFIG_FEC_XCV_TYPE		RMII
-#define CONFIG_ETHPRIME			"FEC1"      /*     ethprime"表示上电后初始eth_current的名??                Net:  FEC1         */
-#endif
-
-#define CONFIG_PHYLIB
-#define CONFIG_PHY_SMSC
-#endif
+#define CONFIG_ETHPRIME			"eth1"
 
 #define CONFIG_IMX_THERMAL
 

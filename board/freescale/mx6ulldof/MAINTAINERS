@@ -5,4 +5,4 @@ F:	board/freescale/mx6ulldof/
 F:	include/configs/mx6ulldof.h
 F:	configs/mx6ull_14x14_dof_defconfig
 F:	configs/mx6ull_14x14_dof_plugin_defconfig
-F:	configs/mx6ulz_14x14_dof_defconfig
+F:	configs/mx6ulz_14x14_evk_defconfig

@@ -176,6 +176,8 @@ int genphy_restart_aneg(struct phy_device *phydev)
 int genphy_config_aneg(struct phy_device *phydev)
 {
 	int result;
+	
+	phy_reset(phydev);
 
 	if (phydev->autoneg != AUTONEG_ENABLE)
 		return genphy_setup_forced(phydev);
