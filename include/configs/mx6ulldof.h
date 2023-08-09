@@ -104,7 +104,6 @@
 		"else " \
 			"bootz ${loadaddr} - ${fdt_addr};" \
 		"fi\0"
-
 #else
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	CONFIG_MFG_ENV_SETTINGS \
@@ -121,6 +120,23 @@
 	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
 	"splashimage=0x8c000000\0" \
+	"bootmenu_0=update rootfs=" \
+		"run rootfsupdate\0" \
+	"bootmenu_1=update kernel=" \
+			"run updatekernel\0" \
+	"bootmenu_2=update dtb=" \
+			"run updatedtb\0" \
+	"bootmenu_3=update fwk=" \
+			"run updatefek\0" \
+	"bootmenu_4=update uboot=" \
+			"run updateuboot\0" \
+	"bootmenu_5=update cfga=" \
+			"run updatecfga\0" \
+	"bootmenu_6=reboot cfgb=" \
+			"run updatecfgb\0" \
+	"bootmenu_7=update fwk=" \
+			"run updatefwk\0" \
+	"" \
 	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
 	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
 	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
