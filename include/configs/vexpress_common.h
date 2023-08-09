@@ -129,6 +129,13 @@
 #define CONFIG_SYS_TIMER_COUNTER	(V2M_TIMER01 + 0x4)
 #define CONFIG_SYS_TIMER_COUNTS_DOWN
 
+#define CONFIG_IPADDR 10.8.8.10
+#define CONFIG_NETMASK 255.255.255.0
+#define CONFIG_SERVERIP 10.8.8.4
+#define CONFIG_BOOTCOMMAND "tftp 0x60008000 zImage_qemu; \
+			tftp 0x61000000 vexpress-v2p-ca9.dtb; \
+			setenv bootargs noinitrd 'console=ttyAMA0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs_qemu,v3 rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:on init=/linuxrc'; \
+			bootz 0x60008000 - 0x61000000"
 /* PL011 Serial Configuration */
 #define CONFIG_PL011_CLOCK		24000000
 #define CONFIG_PL01x_PORTS		{(void *)CONFIG_SYS_SERIAL0, \
@@ -208,7 +215,24 @@
 		"bootflash=run flashargs; " \
 			"cp ${ramdisk_addr} ${ramdisk_addr_r} ${maxramdisk}; " \
 			"bootm ${kernel_addr} ${ramdisk_addr_r}\0" \
-		"fdtfile=" CONFIG_DEFAULT_FDT_FILE "\0"
+		"fdtfile=" CONFIG_DEFAULT_FDT_FILE "\0" \
+		"bootmenu_0=update rootfs=" \
+				"run rootfsupdate\0" \
+		"bootmenu_1=update kernel=" \
+				"run updatekernel\0" \
+		"bootmenu_2=update dtb=" \
+				"run updatedtb\0" \
+		"bootmenu_3=update fwk=" \
+				"run updatefek\0" \
+		"bootmenu_4=update uboot=" \
+				"run updateuboot\0" \
+		"bootmenu_5=update cfga=" \
+				"run updatecfga\0" \
+		"bootmenu_6=reboot cfgb=" \
+				"run updatecfgb\0" \
+		"bootmenu_7=update fwk=" \
+				"run updatefwk\0" \
+				""
 
 /* FLASH and environment organization */
 #define PHYS_FLASH_SIZE			0x04000000	/* 64MB */
