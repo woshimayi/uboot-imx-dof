@@ -82,6 +82,21 @@
 	"mtdparts=" MFG_NAND_PARTITION \
 	"\0"\
 
+
+#define CONFIG_BOOTCOMMAND \
+                            "setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs,v3, rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:off';" \
+                            "tftp 0x80800000 zImage;" \
+                            "tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb;" \
+                            "bootz 0x80800000 - 0x83000000" \
+
+/*
+#define CONFIG_BOOTCOMMAND \
+	                        "setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs,v3, rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:off';" \
+	                        "tftp 0x80800000 zImage;" \
+	                        "tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb;" \
+	                        "bootz 0x80800000 - 0x83000000" \
+*/
+
 #if defined(CONFIG_NAND_BOOT)
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	CONFIG_MFG_ENV_SETTINGS \
@@ -120,11 +135,11 @@
 	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
 	"splashimage=0x8c000000\0" \
-	"bootmenu_0=update rootfs=" \
-		"run rootfsupdate\0" \
-	"bootmenu_1=update kernel=" \
-			"run updatekernel\0" \
-	"bootmenu_2=update dtb=" \
+	"bootmenu_0=tftp upgrdae image and dtb=" \
+		"tftp 0x80800000 zImage;tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb; bootz 0x80800000 - 0x83000000 \0" \
+	"bootmenu_1=via nfs rootfs=" \
+			"setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs,v3, rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:off';\0" \
+	"bootmenu_2=update Uboot=" \
 			"run updatedtb\0" \
 	"bootmenu_3=update fwk=" \
 			"run updatefek\0" \
@@ -231,6 +246,7 @@
 				"fi; " \
 			"fi;\0" \
 
+#if 0
 #define CONFIG_BOOTCOMMAND \
 	   "run findfdt;" \
 	   "run findtee;" \
@@ -245,6 +261,7 @@
 			   "fi; " \
 		   "fi; " \
 	   "else run netboot; fi"
+#endif
 #endif
 
 /* Miscellaneous configurable options */
