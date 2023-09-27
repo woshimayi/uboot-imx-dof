@@ -140,7 +140,7 @@
 	"bootmenu_1=via nfs rootfs=" \
 			"setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs,v3, rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:off';\0" \
 	"bootmenu_2=update Uboot=" \
-			"run updatedtb\0" \
+			"mmc dev 0 0; tftp 80800000 u-boot-dtb.imx; mmc write 80800000 2 450 \0" \
 	"bootmenu_3=update fwk=" \
 			"run updatefek\0" \
 	"bootmenu_4=update uboot=" \
