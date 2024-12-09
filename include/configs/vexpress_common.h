@@ -132,6 +132,7 @@
 #define CONFIG_IPADDR 10.8.8.10
 #define CONFIG_NETMASK 255.255.255.0
 #define CONFIG_SERVERIP 10.8.8.4
+#undef  CONFIG_BOOTCOMMAND
 #define CONFIG_BOOTCOMMAND "tftp 0x60008000 zImage_qemu; \
 			tftp 0x61000000 vexpress-v2p-ca9.dtb; \
 			setenv bootargs noinitrd 'console=ttyAMA0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs_qemu,v3 rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:on init=/linuxrc'; \
