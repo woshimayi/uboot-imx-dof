@@ -261,7 +261,7 @@ export	HOSTARCH HOSTOS
 # set default to nothing for native builds
 #ifeq ($(HOSTARCH),$(ARCH))
 ARCH = arm
-CROSS_COMPILE ?= /home/zs/Documents/wget/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+CROSS_COMPILE ?= /opt/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 #endif
 
 KCONFIG_CONFIG	?= .config
