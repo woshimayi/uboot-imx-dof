@@ -132,11 +132,20 @@
 #define CONFIG_IPADDR 10.8.8.10
 #define CONFIG_NETMASK 255.255.255.0
 #define CONFIG_SERVERIP 10.8.8.4
+
 #undef  CONFIG_BOOTCOMMAND
+#if 0
 #define CONFIG_BOOTCOMMAND "tftp 0x60008000 zImage_qemu; \
 			tftp 0x61000000 vexpress-v2p-ca9.dtb; \
 			setenv bootargs noinitrd 'console=ttyAMA0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs_qemu,v3 rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:on init=/linuxrc'; \
 			bootz 0x60008000 - 0x61000000"
+#else
+#define CONFIG_BOOTCOMMAND "load mmc 0:1 0x60008000 zImage_qemu; \
+			load mmc 0:1 0x61000000 vexpress-v2p-ca9.dtb; \
+			setenv bootargs 'root=/dev/mmcblk0p2 rw rootfstype=ext4 rootwait earlycon console=tty0 console=ttyAMA0 init=/linuxrc ignore_loglevel'; \
+			bootz 0x60008000 - 0x61000000"
+#endif
+
 /* PL011 Serial Configuration */
 #define CONFIG_PL011_CLOCK		24000000
 #define CONFIG_PL01x_PORTS		{(void *)CONFIG_SYS_SERIAL0, \
