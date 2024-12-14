@@ -23,7 +23,7 @@ then
 	exit 0
 fi
 
-
+# qemu-system-arm -M vexpress-a9 -m 1024M -smp 1 -nographic -kernel u-boot -sd uboot.disk     // 使用sd.image 启动rootfs
 
 
 
