@@ -134,10 +134,10 @@
 #define CONFIG_SERVERIP 10.8.8.4
 
 #undef  CONFIG_BOOTCOMMAND
-#if 0
+#if 1
 #define CONFIG_BOOTCOMMAND "tftp 0x60008000 zImage_qemu; \
 			tftp 0x61000000 vexpress-v2p-ca9.dtb; \
-			setenv bootargs noinitrd 'console=ttyAMA0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs_qemu,v3 rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:on init=/linuxrc'; \
+			setenv bootargs noinitrd 'console=ttyAMA0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zsD/linux/nfs/rootfs_qemu,proto=tcp,nfsvers=3 rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:on init=/linuxrc'; \
 			bootz 0x60008000 - 0x61000000"
 #else
 #define CONFIG_BOOTCOMMAND "load mmc 0:1 0x60008000 zImage_qemu; \
