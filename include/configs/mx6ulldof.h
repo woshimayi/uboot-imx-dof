@@ -84,7 +84,7 @@
 
 
 #define CONFIG_BOOTCOMMAND \
-                            "setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs,v3, rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:off';" \
+                            "setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zsD/linux/nfs/rootfs,proto=tcp,nfsvers=3, rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:on init=/linuxrc';" \
                             "tftp 0x80800000 zImage;" \
                             "tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb;" \
                             "bootz 0x80800000 - 0x83000000" \
@@ -138,7 +138,7 @@
 	"bootmenu_0=tftp upgrdae image and dtb=" \
 		"tftp 0x80800000 zImage;tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb; bootz 0x80800000 - 0x83000000 \0" \
 	"bootmenu_1=via nfs rootfs=" \
-			"setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zs/linux/nfs/rootfs,v3, rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:off';\0" \
+			"setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zsD/linux/nfs/rootfs,v3, rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:off';\0" \
 	"bootmenu_2=update Uboot=" \
 			"mmc dev 0 0; tftp 80800000 u-boot-dtb.imx; mmc write 80800000 2 450 \0" \
 	"bootmenu_3=update fwk=" \
