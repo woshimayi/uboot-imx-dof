@@ -9,6 +9,117 @@
 	pinctrl-0 = <&pinctrl_gpmi_nand_1>;
 	status = "okay";
 	nand-on-flash-bbt;
+
+	nand-partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		partition@0 {
+			label = "uboot_a";
+			reg = <0x0 0x800000>;
+			read-only;
+		};
+
+		partition@800000 {
+			label = "uboot_b";
+			reg = <0x800000 0x800000>;
+			read-only;
+		};
+
+		partition@1000000 {
+			label = "kernel_a";
+			reg = <0x1000000 0x1000000>;
+		};
+
+		partition@2000000 {
+			label = "kernel_b";
+			reg = <0x2000000 0x1000000>;
+		};
+
+		partition@3000000 {
+			label = "dtb_a";
+			reg = <0x3000000 0x1000000>;
+		};
+
+		partition@4000000 {
+			label = "dtb_b";
+			reg = <0x4000000 0x1000000>;
+		};
+
+		partition@5000000 {
+			label = "tee_a";
+			reg = <0x5000000 0x1000000>;
+		};
+
+		partition@6000000 {
+			label = "tee_b";
+			reg = <0x6000000 0x1000000>;
+		};
+
+		partition@3c00000 {
+			label = "env";
+			reg = <0x3c00000 0x20000>;
+		};
+
+		partition@3c20000 {
+			label = "env_r";
+			reg = <0x3c20000 0x20000>;
+		};
+
+		partition@7000000 {
+			label = "rootfs_a";
+			reg = <0x7000000 0x800000>; /* This will be dynamic in real use */
+		};
+
+		/* Backup partitions */
+		backup_partition@7800000 {
+			label = "uboot_a_back";
+			reg = <0x7800000 0x800000>;
+			read-only;
+		};
+
+		backup_partition@8000000 {
+			label = "uboot_b_back";
+			reg = <0x8000000 0x800000>;
+			read-only;
+		};
+
+		backup_partition@8800000 {
+			label = "kernel_a_back";
+			reg = <0x8800000 0x1000000>;
+		};
+
+		backup_partition@9800000 {
+			label = "kernel_b_back";
+			reg = <0x9800000 0x1000000>;
+		};
+
+		backup_partition@a800000 {
+			label = "dtb_a_back";
+			reg = <0xa800000 0x1000000>;
+		};
+
+		backup_partition@b800000 {
+			label = "dtb_b_back";
+			reg = <0xb800000 0x1000000>;
+		};
+
+		backup_partition@c800000 {
+			label = "tee_a_back";
+			reg = <0xc800000 0x1000000>;
+		};
+
+		backup_partition@d800000 {
+			label = "tee_b_back";
+			reg = <0xd800000 0x1000000>;
+		};
+
+		backup_partition@e800000 {
+			label = "rootfs_b";
+			reg = <0xe800000 0x1000000>;
+		};
+	};
 };
 
 &iomuxc {

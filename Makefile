@@ -1085,6 +1085,20 @@ endif
 	@# options are whitelisted, so new ones should not be added.
 	$(call cmd,cfgcheck,u-boot.cfg)
 
+NFS_DEPLOY_DIR ?= $(HOME)/linux/nfs
+
+PHONY += copy_u_boot_dtb_imx_to_nfs
+copy_u_boot_dtb_imx_to_nfs:
+	@if [ -f u-boot-dtb.imx ]; then \
+		mkdir -p "$(NFS_DEPLOY_DIR)"; \
+		cp -f u-boot-dtb.imx "$(NFS_DEPLOY_DIR)/"; \
+		echo "Copied u-boot-dtb.imx to $(NFS_DEPLOY_DIR)"; \
+	else \
+		echo "Skip copy: u-boot-dtb.imx not found"; \
+	fi
+
+all: copy_u_boot_dtb_imx_to_nfs
+
 PHONY += dtbs
 dtbs: dts/dt.dtb
 	@:
