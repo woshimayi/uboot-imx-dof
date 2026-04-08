@@ -19,14 +19,15 @@ ifeq ($(MTD_VERSION),old)
 HOST_EXTRACFLAGS += -DMTD_OLD
 endif
 
-always := fw_printenv
-hostprogs-y := fw_printenv
+always := fw_printenv fw_env_example
+hostprogs-y := fw_printenv fw_env_example
 
 lib-y += fw_env.o \
 	crc32.o ctype.o linux_string.o \
 	env_attr.o env_flags.o
 
 fw_printenv-objs := fw_env_main.o $(lib-y)
+fw_env_example-objs := fw_env_example.o $(lib-y)
 
 quiet_cmd_crosstools_strip = STRIP   $^
       cmd_crosstools_strip = $(STRIP) $^; touch $@
