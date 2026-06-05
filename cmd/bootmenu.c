@@ -245,6 +245,68 @@ static void bootmenu_destroy(struct bootmenu_data *menu)
 	free(menu);
 }
 
+/*
+ * Expand ${name} references in a menu-label string by looking each
+ * `name` up in the U-Boot environment. Unknown / malformed references
+ * are copied verbatim. The output buffer is sized at strlen(src) + 256
+ * which is generous for the small set of labels used in this project;
+ * env values that would not fit in the remaining buffer are silently
+ * truncated (no diagnostic). Returns a newly-allocated string the
+ * caller must free, or strdup(src) on allocation failure (never NULL).
+ */
+static char *expand_title(const char *src)
+{
+	int inlen = strlen(src);
+	int outlen = inlen + 256;
+	char *out = malloc(outlen);
+	char *p;
+	const char *s = src;
+
+	if (!out)
+		return strdup(src);
+
+	p = out;
+	while (*s) {
+		if (s[0] == '$' && s[1] == '{') {
+			const char *end = strchr(s, '}');
+			if (end) {
+				int varlen = end - s - 2;
+				char varname[64];
+				const char *val = NULL;
+				int avail = outlen - (p - out) - 1;
+				int expanded = 0;
+
+				if (varlen > 0 && varlen < 64) {
+					memcpy(varname, s + 2, varlen);
+					varname[varlen] = '\0';
+					val = env_get(varname);
+				}
+				if (val) {
+					int vallen = strlen(val);
+					if (vallen > avail)
+						vallen = avail;
+					memcpy(p, val, vallen);
+					p += vallen;
+					s = end + 1;
+					expanded = 1;
+				}
+				/*
+				 * If we did not expand (unknown var, empty name,
+				 * or name too long), fall through to per-byte
+				 * copy so the literal ${...} text is preserved.
+				 */
+				if (expanded)
+					continue;
+			}
+		}
+		if (p - out < outlen - 1)
+			*p++ = *s;
+		s++;
+	}
+	*p = '\0';
+	return out;
+}
+
 static struct bootmenu_data *bootmenu_create(int delay)
 {
 	unsigned short int i = 0;
@@ -280,14 +342,25 @@ static struct bootmenu_data *bootmenu_create(int delay)
 		if (!entry)
 			goto cleanup;
 
-		len = sep-option;
-		entry->title = malloc(len + 1);
+		/* Title is everything before the first '=' in the env value. */
+		len = sep - option;
+		/*
+		 * Copy title to a stack buffer so expand_title gets a true
+		 * C string and we never mutate the live env entry.
+		 */
+		{
+			char title_buf[128];
+			int tlen = sep - option;
+			if (tlen >= (int)sizeof(title_buf))
+				tlen = sizeof(title_buf) - 1;
+			memcpy(title_buf, option, tlen);
+			title_buf[tlen] = '\0';
+			entry->title = expand_title(title_buf);
+		}
 		if (!entry->title) {
 			free(entry);
 			goto cleanup;
 		}
-		memcpy(entry->title, option, len);
-		entry->title[len] = 0;
 
 		len = strlen(sep + 1);
 		entry->command = malloc(len + 1);
