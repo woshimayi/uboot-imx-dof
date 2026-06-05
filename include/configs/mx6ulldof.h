@@ -138,9 +138,9 @@
 		"saveenv; " \
 		"echo Next boot will use slot ${target_slot}, resetting...; " \
 		"reset\0" \
-	"updateboot_a=tftp 0x80800000 boot_a.img; nand erase.part boot_a; nand write.trimffs 0x80800000 boot_a ${filesize}\0" \
-	"updateboot_b=tftp 0x80800000 boot_b.img; nand erase.part boot_b; nand write.trimffs 0x80800000 boot_b ${filesize}\0" \
-	"updateboot=run updateboot_a\0" \
+	"update_boot=run set_target_slot ; tftp 0x80800000 u-boot-dtb.imx ; nand erase.part uboot_${target_slot} ; nandbcb init 0x80800000 uboot_${target_slot} ${filesize} ; run switch_and_reboot\0" \
+	"update_kfd=run set_target_slot ; nand erase.part kfd_${target_slot} ; ubi part kfd_${target_slot} ; ubi create kernel 0x800000 s || true ; ubi create dtb 0x20000 s || true ; tftp 0x80800000 zImage ; ubi write kernel 0x80800000 ${filesize} ; tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb ; ubi write dtb 0x83000000 ${filesize} ; run switch_and_reboot\0" \
+	"update_rootfs=run set_target_slot ; tftp 0x80800000 rootfs_dof.ubi ; nand erase.part rootfs_${target_slot} ; nand write.trimffs 0x80800000 rootfs_${target_slot} ${filesize} ; run switch_and_reboot\0" \
 	"bootargs=console=ttymxc0,115200 ubi.mtd=8 "  \
 		"root=ubi0:rootfs rootfstype=ubifs "		     \
 		BOOTARGS_CMA_SIZE \
