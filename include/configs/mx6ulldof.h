@@ -157,6 +157,13 @@
 		"ubi read ${fdt_addr} dtb && "\
 		"bootz ${loadaddr} - ${fdt_addr}\0" \
 	"bootcmd=run bootcmd_primary\0" \
+	"bootmenu_0=boot from nfs=setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs nfsroot=10.8.8.4:/home/zsD/linux/nfs/rootfs,v3, rw ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:off' ; tftp 0x80800000 zImage ; tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb ; bootz 0x80800000 - 0x83000000\0" \
+	"bootmenu_1=update boot -> ${target_slot}=run update_boot\0" \
+	"bootmenu_2=update kfd -> ${target_slot}=run update_kfd\0" \
+	"bootmenu_3=update rootfs -> ${target_slot}=run update_rootfs\0" \
+	"bootmenu_4=set active slot to a=setenv active_slot a ; run set_target_slot ; saveenv\0" \
+	"bootmenu_5=set active slot to b=setenv active_slot b ; run set_target_slot ; saveenv\0" \
+	"bootmenu_6=switch next boot to ${target_slot}=run switch_and_reboot\0" \
 	"bootargs_backup=console=ttymxc0,115200 ubi.mtd=rootfs_a,rootfs_b " \
 		"root=ubi0_0 rootfstype=ubifs " \
 		BOOTARGS_CMA_SIZE \
