@@ -53,8 +53,8 @@ tools/env/fw_env_example - C 语言示例程序
 ## fw_env.config 配置
 
 ```
-/dev/mtd8	0x0000		0x20000		0x20000		1
-/dev/mtd9	0x0000		0x20000		0x20000		1
+/dev/mtd6	0x0000		0x20000		0x20000		4
+/dev/mtd7	0x0000		0x20000		0x20000		4
 ```
 
 格式：`MTD设备 设备偏移 环境大小 Flash扇区大小 扇区数量`
@@ -165,8 +165,8 @@ system("/root/fw_env_example -c /root/fw_env.config list");
 
 | MTD | 名称 | 大小 | 用途 |
 |-----|------|------|------|
-| mtd8 | env | 128KB | 环境变量 |
-| mtd9 | env_r | 128KB | 环境变量备份 |
+| mtd6 | env_a | 512KB | 环境变量 (4 个 erase block, 含坏块容差) |
+| mtd7 | env_b | 512KB | 环境变量备份 (4 个 erase block, 含坏块容差) |
 
 ## 注意事项
 
@@ -185,7 +185,7 @@ system("/root/fw_env_example -c /root/fw_env.config list");
 ### "No such device"
 检查：
 - MTD 设备是否正确
-- `/dev/mtd8`, `/dev/mtd9` 是否存在
+- `/dev/mtd6`, `/dev/mtd7` 是否存在
 - 内核是否编译了 MTD 支持
 
 ### "cannot find /lib/ld-linux-armhf.so.3"

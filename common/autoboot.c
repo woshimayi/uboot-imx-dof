@@ -341,7 +341,8 @@ const char *bootdelay_process(void)
 	if (is_boot_from_usb() && env_get("bootcmd_mfg")) {
 		disconnect_from_pc();
 		printf("Boot from USB for mfgtools\n");
-		bootdelay = 0;
+		/* Doflash mod: 给 3 秒时间让用户中断 bootcmd_mfg，进入 U-Boot 提示符 */
+		bootdelay = 3;
 		env_set_default("Use default environment for \
 				 mfgtools\n", 0);
 	} else if (is_boot_from_usb()) {
