@@ -121,6 +121,23 @@
 	"fdt_high=0xffffffff\0"	  \
 	"tee_addr=0x84000000\0" \
 	"console=ttymxc0\0" \
+	"active_slot=a\0" \
+	"set_target_slot=" \
+		"if test \"${active_slot}\" = a; then " \
+			"setenv target_slot b; " \
+		"else " \
+			"setenv target_slot a; " \
+		"fi\0" \
+	"switch_and_reboot=run set_target_slot; " \
+		"if test \"${active_slot}\" = a; then " \
+			"setenv bootcmd 'run bootcmd_backup'; " \
+		"else " \
+			"setenv bootcmd 'run bootcmd_primary'; " \
+		"fi; " \
+		"setenv active_slot ${target_slot}; " \
+		"saveenv; " \
+		"echo Next boot will use slot ${target_slot}, resetting...; " \
+		"reset\0" \
 	"updateboot_a=tftp 0x80800000 boot_a.img; nand erase.part boot_a; nand write.trimffs 0x80800000 boot_a ${filesize}\0" \
 	"updateboot_b=tftp 0x80800000 boot_b.img; nand erase.part boot_b; nand write.trimffs 0x80800000 boot_b ${filesize}\0" \
 	"updateboot=run updateboot_a\0" \
