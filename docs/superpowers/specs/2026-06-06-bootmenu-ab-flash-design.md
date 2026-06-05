@@ -110,20 +110,22 @@ BCB-controlled area); whether the new U-Boot runs depends on the existing
 
 ```
 update_kfd = run set_target_slot ;
-              tftp 0x80800000 zImage ;
-              tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb ;
-              setenv dtb_filesize ${filesize} ;
               nand erase.part kfd_${target_slot} ;
               ubi part kfd_${target_slot} ;
               ubi create kernel 0x800000 s || true ;
               ubi create dtb 0x20000 s || true ;
+              tftp 0x80800000 zImage ;
               ubi write kernel 0x80800000 ${filesize} ;
-              ubi write dtb 0x83000000 ${dtb_filesize} ;
+              tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb ;
+              ubi write dtb 0x83000000 ${filesize} ;
               <switch bootcmd + saveenv + reset>
 ```
 
-The `|| true` guards make the `ubi create` lines idempotent: a second flash to
-the same slot reuses the existing static volumes.
+The order of `tftp` / `ubi write` is interleaved (not batched) because
+U-Boot's `filesize` env is overwritten by every `tftp` call; if both
+images were tftp'd up front, the kernel write would use the dtb size.
+The `|| true` guards make the `ubi create` lines idempotent: a second
+flash to the same slot reuses the existing static volumes.
 
 #### `update_rootfs` — rootfs UBI image
 
