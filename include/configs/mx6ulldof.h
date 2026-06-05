@@ -146,12 +146,12 @@
 		BOOTARGS_CMA_SIZE \
 		MFG_NAND_BOOTARGS_MTDPARTS \
 		"\0" \
-	"bootcmd_primary=setenv bootargs 'console=ttymxc0,115200 ubi.mtd=8 root=ubi0:rootfs rootfstype=ubifs mtdparts=gpmi-nand:8m(uboot_a),8m(uboot_b),32m(kfd_a),32m(kfd_b),16m(tee_a),16m(tee_b),512k(env_a),512k(env_b),175m(rootfs_a),175m(rootfs_b),-(date)' && "\
+	"bootcmd_primary=run set_target_slot ; setenv active_slot a ; setenv bootargs 'console=ttymxc0,115200 ubi.mtd=8 root=ubi0:rootfs rootfstype=ubifs mtdparts=gpmi-nand:8m(uboot_a),8m(uboot_b),32m(kfd_a),32m(kfd_b),16m(tee_a),16m(tee_b),512k(env_a),512k(env_b),175m(rootfs_a),175m(rootfs_b),-(date)' && "\
 		"ubi part kfd_a && "\
 		"ubi read ${loadaddr} kernel && "\
 		"ubi read ${fdt_addr} dtb && "\
 		"bootz ${loadaddr} - ${fdt_addr}\0" \
-	"bootcmd_backup=setenv bootargs 'console=ttymxc0,115200 ubi.mtd=9 root=ubi0:rootfs rootfstype=ubifs mtdparts=gpmi-nand:8m(uboot_a),8m(uboot_b),32m(kfd_a),32m(kfd_b),16m(tee_a),16m(tee_b),512k(env_a),512k(env_b),175m(rootfs_a),175m(rootfs_b),-(date)' && "\
+	"bootcmd_backup=run set_target_slot ; setenv active_slot b ; setenv bootargs 'console=ttymxc0,115200 ubi.mtd=9 root=ubi0:rootfs rootfstype=ubifs mtdparts=gpmi-nand:8m(uboot_a),8m(uboot_b),32m(kfd_a),32m(kfd_b),16m(tee_a),16m(tee_b),512k(env_a),512k(env_b),175m(rootfs_a),175m(rootfs_b),-(date)' && "\
 		"ubi part kfd_b && "\
 		"ubi read ${loadaddr} kernel && "\
 		"ubi read ${fdt_addr} dtb && "\
