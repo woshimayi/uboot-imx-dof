@@ -141,6 +141,7 @@
 	"update_boot=run set_target_slot ; tftp 0x80800000 u-boot-dtb.imx ; nand erase.part uboot_${target_slot} ; nandbcb init 0x80800000 uboot_${target_slot} ${filesize} ; run switch_and_reboot\0" \
 	"update_kfd=run set_target_slot ; nand erase.part kfd_${target_slot} ; ubi part kfd_${target_slot} ; ubi create kernel 0x800000 s || true ; ubi create dtb 0x20000 s || true ; tftp 0x80800000 zImage ; ubi write kernel 0x80800000 ${filesize} ; tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb ; ubi write dtb 0x83000000 ${filesize} ; run switch_and_reboot\0" \
 	"update_rootfs=run set_target_slot ; tftp 0x80800000 rootfs_dof.ubi ; nand erase.part rootfs_${target_slot} ; nand write.trimffs 0x80800000 rootfs_${target_slot} ${filesize} ; run switch_and_reboot\0" \
+	"update_kfd_ubi=run set_target_slot ; tftp 0x80800000 kfd.ubi ; nand erase.part kfd_${target_slot} ; nand write.trimffs 0x80800000 kfd_${target_slot} ${filesize} ; run switch_and_reboot\0" \
 	"bootargs=console=ttymxc0,115200 ubi.mtd=8 "  \
 		"root=ubi0:rootfs rootfstype=ubifs "		     \
 		BOOTARGS_CMA_SIZE \
@@ -164,6 +165,7 @@
 	"bootmenu_4=set active slot to a=setenv active_slot a ; run set_target_slot ; saveenv\0" \
 	"bootmenu_5=set active slot to b=setenv active_slot b ; run set_target_slot ; saveenv\0" \
 	"bootmenu_6=switch next boot to ${target_slot}=run switch_and_reboot\0" \
+	"bootmenu_7=update kfd (prebuilt .ubi)=run update_kfd_ubi\0" \
 	"bootargs_backup=console=ttymxc0,115200 ubi.mtd=rootfs_a,rootfs_b " \
 		"root=ubi0_0 rootfstype=ubifs " \
 		BOOTARGS_CMA_SIZE \
