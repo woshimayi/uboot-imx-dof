@@ -307,10 +307,65 @@ static char *expand_title(const char *src)
 	return out;
 }
 
+/*
+ * Compile-time default bootmenu entries. Used when the env has no
+ * bootmenu_N entries (e.g. fresh NAND with default env wiped, or a
+ * build that did not include them in CONFIG_EXTRA_ENV_SETTINGS).
+ * When bootmenu_0..N env vars ARE set, they take precedence.
+ *
+ * Labels may contain ${var} references which are expanded at display
+ * time by expand_title(). Actions reference env helpers (run update_*
+ * etc.) which themselves live in CONFIG_EXTRA_ENV_SETTINGS.
+ */
+static const struct {
+	const char *label;
+	const char *action;
+} bootmenu_defaults[] = {
+	{
+		"boot from nfs",
+		"setenv bootargs 'noinitrd console=ttymxc0,115200 root=/dev/nfs "
+		"nfsroot=10.8.8.4:/home/zsD/linux/nfs/rootfs,v3, rw "
+		"ip=10.8.8.10:10.8.8.4:10.8.8.1:255.255.255.0::eth0:off' ; "
+		"tftp 0x80800000 zImage ; "
+		"tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb ; "
+		"bootz 0x80800000 - 0x83000000"
+	},
+	{
+		"update boot -> ${target_slot}",
+		"run update_boot"
+	},
+	{
+		"update kfd -> ${target_slot}",
+		"run update_kfd"
+	},
+	{
+		"update rootfs -> ${target_slot}",
+		"run update_rootfs"
+	},
+	{
+		"set active slot to a",
+		"setenv active_slot a ; run set_target_slot ; saveenv"
+	},
+	{
+		"set active slot to b",
+		"setenv active_slot b ; run set_target_slot ; saveenv"
+	},
+	{
+		"switch next boot to ${target_slot}",
+		"run switch_and_reboot"
+	},
+	{
+		"update kfd (prebuilt .ubi)",
+		"run update_kfd_ubi"
+	},
+};
+
 static struct bootmenu_data *bootmenu_create(int delay)
 {
 	unsigned short int i = 0;
 	const char *option;
+	char default_buf[768];
+	int from_defaults = 0;
 	struct bootmenu_data *menu;
 	struct bootmenu_entry *iter = NULL;
 
@@ -331,7 +386,37 @@ static struct bootmenu_data *bootmenu_create(int delay)
 	if (default_str)
 		menu->active = (int)simple_strtol(default_str, NULL, 10);
 
-	while ((option = bootmenu_getoption(i))) {
+	while (i < MAX_COUNT - 1) {
+		if (from_defaults) {
+			int def_idx = i;
+			int n;
+
+			if (def_idx >= (int)ARRAY_SIZE(bootmenu_defaults))
+				break;
+			n = snprintf(default_buf, sizeof(default_buf),
+				     "%s=%s",
+				     bootmenu_defaults[def_idx].label,
+				     bootmenu_defaults[def_idx].action);
+			if (n < 0 || n >= (int)sizeof(default_buf))
+				break;
+			option = default_buf;
+		} else {
+			option = bootmenu_getoption(i);
+			if (!option) {
+				/*
+				 * No env entry at this index. If this is i==0,
+				 * the env has no bootmenu_* entries at all -
+				 * fall back to compile-time defaults. If some
+				 * env entries existed, stop here so the env
+				 * wins.
+				 */
+				if (i == 0) {
+					from_defaults = 1;
+					continue;
+				}
+				break;
+			}
+		}
 		sep = strchr(option, '=');
 		if (!sep) {
 			printf("Invalid bootmenu entry: %s\n", option);
