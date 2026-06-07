@@ -138,10 +138,10 @@
 		"saveenv; " \
 		"echo Next boot will use slot ${target_slot}, resetting...; " \
 		"reset\0" \
-	"update_boot=run set_target_slot ; tftp 0x80800000 u-boot-dtb.imx ; nand erase.part uboot_${target_slot} ; nandbcb init 0x80800000 uboot_${target_slot} ${filesize} ; run switch_and_reboot\0" \
-	"update_kfd=run set_target_slot ; nand erase.part kfd_${target_slot} ; ubi part kfd_${target_slot} ; ubi create kernel 0x800000 s || true ; ubi create dtb 0x20000 s || true ; tftp 0x80800000 zImage ; ubi write kernel 0x80800000 ${filesize} ; tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb ; ubi write dtb 0x83000000 ${filesize} ; run switch_and_reboot\0" \
-	"update_rootfs=run set_target_slot ; tftp 0x80800000 rootfs_dof.ubi ; nand erase.part rootfs_${target_slot} ; nand write.trimffs 0x80800000 rootfs_${target_slot} ${filesize} ; run switch_and_reboot\0" \
-	"update_kfd_ubi=run set_target_slot ; tftp 0x80800000 kfd.ubi ; nand erase.part kfd_${target_slot} ; nand write.trimffs 0x80800000 kfd_${target_slot} ${filesize} ; run switch_and_reboot\0" \
+	"update_boot=run set_target_slot ; tftp 0x80800000 u-boot-dtb.imx ; if test -n \"${filesize}\" && test \"${filesize}\" != 0 ; then nand erase.part uboot_${target_slot} ; nandbcb init 0x80800000 uboot_${target_slot} ${filesize} ; run switch_and_reboot ; else echo \"ERROR: tftp u-boot-dtb.imx failed, aborting (uboot_${target_slot} not erased)\" ; fi\0" \
+	"update_kfd=run set_target_slot ; nand erase.part kfd_${target_slot} ; ubi part kfd_${target_slot} ; ubi create kernel 0x800000 s || true ; ubi create dtb 0x20000 s || true ; tftp 0x80800000 zImage ; if test -n \"${filesize}\" && test \"${filesize}\" != 0 ; then ubi write 0x80800000 kernel ${filesize} ; tftp 0x83000000 imx6ull-14x14-evk-dof-nand.dtb ; if test -n \"${filesize}\" && test \"${filesize}\" != 0 ; then ubi write 0x83000000 dtb ${filesize} ; run switch_and_reboot ; else echo \"ERROR: tftp dtb failed, kernel volume written but dtb left empty\" ; fi ; else echo \"ERROR: tftp zImage failed, nothing written to kfd_${target_slot}\" ; fi\0" \
+	"update_rootfs=run set_target_slot ; tftp 0x80800000 rootfs_dof.ubi ; if test -n \"${filesize}\" && test \"${filesize}\" != 0 ; then nand erase.part rootfs_${target_slot} ; nand write.trimffs 0x80800000 rootfs_${target_slot} ${filesize} ; run switch_and_reboot ; else echo \"ERROR: tftp rootfs_dof.ubi failed, aborting (rootfs_${target_slot} not erased)\" ; fi\0" \
+	"update_kfd_ubi=run set_target_slot ; tftp 0x80800000 kfd.ubi ; if test -n \"${filesize}\" && test \"${filesize}\" != 0 ; then nand erase.part kfd_${target_slot} ; nand write.trimffs 0x80800000 kfd_${target_slot} ${filesize} ; run switch_and_reboot ; else echo \"ERROR: tftp kfd.ubi failed, aborting (kfd_${target_slot} not erased)\" ; fi\0" \
 	"bootargs=console=ttymxc0,115200 ubi.mtd=8 "  \
 		"root=ubi0:rootfs rootfstype=ubifs "		     \
 		BOOTARGS_CMA_SIZE \
